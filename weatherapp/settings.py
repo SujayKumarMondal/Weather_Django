@@ -120,3 +120,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 # django_heroku.settings(locals())
+
+ALLOWED_HOSTS = ['.vercel.app' , '.now.sh']
+DEBUG = False
+
+STATICFILES_DIRS = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
