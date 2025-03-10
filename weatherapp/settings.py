@@ -125,7 +125,14 @@ ALLOWED_HOSTS = ['.vercel.app' , '.now.sh']
 DEBUG = False
 
 # STATICFILES_DIRS = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = (
-    BASE_DIR / "static",  # Tuple of static directories
-)
+from pathlib import Path
+
+# BASE_DIR is now a Path object
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Define where static files are located
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Correct way to use / with Path object
+]
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
