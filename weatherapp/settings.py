@@ -124,5 +124,8 @@ STATIC_URL = '/static/'
 ALLOWED_HOSTS = ['.vercel.app' , '.now.sh']
 DEBUG = False
 
-STATICFILES_DIRS = os.path.join(BASE_DIR, 'static')
+# STATICFILES_DIRS = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (
+    BASE_DIR / "static",  # Tuple of static directories
+)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
