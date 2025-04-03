@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css" />
+    <link rel="shortcut icon" href="https://cdn3.iconfinder.com/data/icons/bebreezee-weather-symbols/691/icon-weather-sunsleetlight-512.png" type="image/x-icon">
+    <style>
+        body {
+            background: linear-gradient(135deg, #3c9d9b, #a4c7b4);
+            font-family: 'Roboto', sans-serif;
+            color: white;
+        }
+
+        .hero.is-primary {
+            background-color: #f45b69;
+            color: #fff;
+        }
+
+        .hero-body {
+            padding: 3rem 1.5rem;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #fff;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .section {
+            padding: 3rem 1.5rem;
+        }
+
+        .notification {
+            background-color: #e6f1f1;
+            color: #2c3e50;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .notification:hover {
+            background-color: #d0e8e8;
+        }
+
+        .button.is-info {
+            background-color: #6c63ff;
+            color: #fff;
+            font-weight: bold;
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .button.is-info:hover {
+            background-color: #5b56e1;
+        }
+
+        .box {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            margin-top: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .media-content {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
+
+        .delete {
+            background-color: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .delete:hover {
+            transform: scale(1.2);
+            color: #f45b69;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .column.is-offset-4 {
+            display: flex;
+            justify-content: center;
+        }
+
+        .column.is-4 {
+            max-width: 500px;
+        }
+
+        .image.is-50x50 img {
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Weather Detector
+                </h1>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-offset-4 is-4">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="field has-addons">
+                            <div class="control is-expanded">
+                                {{ form.name }}
+                            </div>
+                            <div class="control">
+                                <button type="submit" class="button is-info">
+                                    Add City
+                                </button>
+                            </div>
+                        </div>
+                        {% if message %}
+                            <div class="notification {{ message_class }}">{{ message }}<button class="del-msg delete" onclick="document.getElementsByClassName('notification')[0].style.display='none'"></button></div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-offset-4 is-4">
+                    {% for city_weather in weather_data %}
+                    <div class="box">
+                        <article class="media">
+                            <div class="media-left">
+                                <figure class="image is-50x50">
+                                    <img src="http://openweathermap.org/img/w/{{ city_weather.icon }}.png" alt="Image">
+                                </figure>
+                            </div>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <span class="title">{{ city_weather.city }}</span>
+                                        <br>
+                                        <span class="subtitle">{{ city_weather.temperature }}° F</span>
+                                        <br> 
+                                        <span class="subtitle">Feels Like: {{ city_weather.feels_like }}° F</span>
+                                        <br> 
+                                        <span class="subtitle">{{ city_weather.description }}</span>
+                                        <br>
+                                        <strong>Humidity:</strong> {{ city_weather.humidity }}% 
+                                        <br>
+                                        <strong>Pressure:</strong> {{ city_weather.pressure }} hPa
+                                        <br>
+                                        <strong>Wind Speed:</strong> {{ city_weather.wind_speed }} m/s
+                                        <br>
+                                        <strong>Wind Direction:</strong> {{ city_weather.wind_direction }}°
+                                        <br>
+                                        <strong>Cloudiness:</strong> {{ city_weather.cloudiness }}%
+                                        <br>
+                                        <strong>Visibility:</strong> {{ city_weather.visibility }} meters
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="media-right">
+                                <a href="{% url 'delete_city' city_weather.city %}">
+                                    <button class="delete"></button>
+                                </a>
+                            </div>
+                        </article>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    </footer>
+</body>
+
+</html>
